@@ -1,0 +1,61 @@
+#include "FastLED.h"
+
+#define LED_TYPE WS2811
+#define DATA_PIN 7
+#define NUM_LEDS 300
+#define COLOR_ORDER RGB
+#define BRIGHTNESS 230
+
+CRGB leds[NUM_LEDS];
+
+// Perfectly balanced start positions
+int16_t positionA = 0;
+int16_t positionB = 60;
+int16_t positionC = 120;
+int16_t positionD = 180;
+int16_t positionE = 240;
+
+const uint16_t holdTime = 150;  // Speed of movement
+int8_t delta = 1;               // Direction of movement (1 = forward)
+
+void setup() {
+  delay(1500);  // Startup delay for power stability
+
+  FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, NUM_LEDS)
+         .setCorrection(TypicalLEDStrip)
+         .setDither(BRIGHTNESS < 230);
+
+  FastLED.setBrightness(BRIGHTNESS);
+}
+
+void loop() {
+  EVERY_N_MILLISECONDS(holdTime) {
+    // Tail fade effect
+    fadeToBlackBy(leds, NUM_LEDS, 100);
+
+    // Vibrant Colors
+    //leds[positionA] = CRGB(110, 0, 255);   // Purple
+    //leds[positionB] = CRGB(255, 197, 0);    // Yellow
+    //leds[positionC] = CRGB(255, 10, 200);    // Pink Aura
+    //leds[positionD] = CRGB(10, 240, 225);   // Turquoise
+    //leds[positionE] = CRGB(255, 70, 0);   // Orange
+
+    //Pastel Colors
+    leds[positionA] = CRGB(160, 100, 255);   // Purple Pastel
+    leds[positionB] = CRGB(100, 255, 100);    // Green Pastel
+    leds[positionC] = CRGB(255, 100, 200);    // Pink Aura Pastel
+    leds[positionD] = CRGB(80, 255, 230);   // Turquoise Pastel
+    leds[positionE] = CRGB(255, 100, 50);   // Orange Pastel
+
+    
+
+    FastLED.show();
+
+    // Move positions forward (with wrap-around)
+    positionA = (positionA + delta + NUM_LEDS) % NUM_LEDS;
+    positionB = (positionB + delta + NUM_LEDS) % NUM_LEDS;
+    positionC = (positionC + delta + NUM_LEDS) % NUM_LEDS;
+    positionD = (positionD + delta + NUM_LEDS) % NUM_LEDS;
+    positionE = (positionE + delta + NUM_LEDS) % NUM_LEDS;
+  }
+}
